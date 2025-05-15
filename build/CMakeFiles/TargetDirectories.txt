@@ -1,0 +1,8 @@
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/Shaders.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/VulkanProject.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/edit_cache.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/rebuild_cache.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/list_install_components.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/install.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/install/local.dir
+/mnt/secondary-drive/Vulkan/PineVeil/build/CMakeFiles/install/strip.dir
