@@ -232,8 +232,13 @@ CMakeFiles/VulkanProject.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/include/c++/11/bits/std_thread.h \
   /usr/include/c++/11/bits/refwrap.h \
   /usr/include/c++/11/bits/unique_ptr.h \
-  /usr/include/c++/11/bits/this_thread_sleep.h
+  /usr/include/c++/11/bits/this_thread_sleep.h \
+  /usr/include/c++/11/set \
+  /usr/include/c++/11/bits/stl_set.h \
+  /usr/include/c++/11/bits/stl_multiset.h
 
+
+/usr/include/c++/11/bits/stl_multiset.h:
 
 /usr/include/c++/11/bits/refwrap.h:
 
@@ -346,6 +351,8 @@ CMakeFiles/VulkanProject.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/stdlib.h:
 
 /usr/include/c++/11/bits/functional_hash.h:
+
+/usr/include/c++/11/bits/stl_set.h:
 
 /usr/include/c++/11/string_view:
 
@@ -642,6 +649,8 @@ CMakeFiles/VulkanProject.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
+
+/usr/include/c++/11/set:
 
 /usr/include/vk_video/vulkan_video_codecs_common.h:
 
