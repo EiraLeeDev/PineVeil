@@ -124,7 +124,7 @@ private:
 
     void createInstance() {
         if (enableValidationLayers && !checkValidationLayerSupport()) {
-            throw std::runtime_error("Validation Layers requested, but not available! X_X !");
+            throw std::runtime_error("Validation Layers requested, but not available!");
         }
 
         VkApplicationInfo appInfo{};
@@ -157,7 +157,7 @@ private:
         }
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to create instance");
+            throw std::runtime_error("Failed to create instance!");
         }
     }
 
@@ -217,7 +217,7 @@ private:
 
         if (vkCreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, 
             &debugMessenger) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to set up Debug Messenger!P_d");
+            throw std::runtime_error("Failed to set up Debug Messenger!");
         }
     }
 
