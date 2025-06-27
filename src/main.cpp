@@ -15,6 +15,7 @@
 #include <limits>
 #include <algorithm>
 #include <fstream>
+#include <filesystem>
 
 const uint32_t WIDTH = 1024;
 const uint32_t HEIGHT = 768;
@@ -100,9 +101,13 @@ private:
     VkExtent2D swapChainExtent;
     std::vector<VkImageView> swapChainImageViews;
 
+    std::vector<VkFramebuffer> swapChainFramebuffers;
+
     VkRenderPass renderPass;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
+
+    VkCommandPool commandPool;
 
     void initWindow() {
         glfwInit();
@@ -123,6 +128,7 @@ private:
         createImageViews();
 		createRenderPass();
         createGraphicsPipeline();
+        createFramebuffers();
     }
 
     void mainLoop() {
@@ -133,6 +139,10 @@ private:
     }
 
     void cleanup() {
+        for (auto framebuffer : swapChainFramebuffers) {
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+        }
+
         vkDestroyPipeline(device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);
@@ -584,6 +594,11 @@ private:
     }
 
     static std::vector<char> readFile(const std::string& filename) {
+
+        if (!std::filesystem::exists(filename)) {
+            throw std::runtime_error("File does not exist: " + filename);
+        }
+
         std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
         if (!file.is_open()) {
@@ -602,8 +617,13 @@ private:
     }
 
     void createGraphicsPipeline() {
-        auto vertShaderCode = readFile("../assets/shaders/vert.spv");
-        auto fragShaderCode = readFile("../assets/shaders/frag.spv");
+        #ifdef __linux__
+            auto vertShaderCode = readFile("../assets/shaders/shader.vert.spv");
+            auto fragShaderCode = readFile("../assets/shaders/shader.frag.spv");
+        #else
+            auto vertShaderCode = readFile("../../assets/shaders/shader.vert.spv");
+            auto fragShaderCode = readFile("../../assets/shaders/shader.frag.spv");
+        #endif
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -702,7 +722,7 @@ private:
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
         if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create graphics pipeline!");
+            throw std::runtime_error("Failed to create graphics pipeline!");
         }
 
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
@@ -710,13 +730,14 @@ private:
     }
 
 	void createRenderPass() {
-		VkAttachmentDescription colorAttachment{};
-		colorAttachment.format = swapChainImageFormat;
-		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        VkAttachmentDescription colorAttachment{};
+        colorAttachment.format = swapChainImageFormat;
+        colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+        colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-
         colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
         VkAttachmentReference colorAttachmentRef{};
@@ -728,9 +749,6 @@ private:
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colorAttachmentRef;
 
-        VkRenderPass renderPass;
-        VkPipelineLayout pipelineLayout;
-
         VkRenderPassCreateInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassInfo.attachmentCount = 1;
@@ -739,9 +757,32 @@ private:
         renderPassInfo.pSubpasses = &subpass;
 
         if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to create Render Pass!");
+            throw std::runtime_error("Failed to create render pass!");
         }
-	}
+    }
+
+    void createFramebuffers() {     
+        swapChainFramebuffers.resize(swapChainImageViews.size());
+
+        for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+            VkImageView attachments[] = {
+                swapChainImageViews[i]
+            };
+
+            VkFramebufferCreateInfo framebufferInfo{};
+            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+            framebufferInfo.renderPass = renderPass;
+            framebufferInfo.attachmentCount = 1;
+            framebufferInfo.pAttachments = attachments;
+            framebufferInfo.width = swapChainExtent.width;
+            framebufferInfo.height = swapChainExtent.height;
+            framebufferInfo.layers = 1;
+
+            if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+                throw std::runtime_error("Failed to create framebuffer!");
+            }
+        }
+    }
 };
 
 int main() {
