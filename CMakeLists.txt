@@ -27,8 +27,6 @@ if(WIN32)
     # Set GLFW directory if needed - UPDATED PATH
     if(EXISTS "C:/Users/jackt/glfw")
         set(glfw3_DIR "C:/Users/jackt/glfw/lib/cmake/glfw3")
-        # If the above doesn't work, try the alternative:
-        # set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};C:/Users/jackt/glfw")
     endif()
     
     # Set GLM directory if needed - UPDATED PATH
@@ -83,6 +81,16 @@ if(NOT glm_FOUND)
     else()
         message(FATAL_ERROR "GLM not found. Please install GLM or specify its location.")
     endif()
+endif()
+
+# WINDOWS STB
+set(STB_MASTER_DIR "C:/Users/jackt/stb-master")
+if(EXISTS "${STB_MASTER_DIR}")
+    add_library(stb INTERFACE)
+    target_include_directories(stb INTERFACE "${STB_MASTER_DIR}")
+    message(STATUS "Found stb-master for inclusion at: ${STB_MASTER_DIR}")
+else()
+    message(WARNING "stb-master directory not found at ${STB_MASTER_DIR}")
 endif()
 
 # Validation layers config
@@ -169,6 +177,7 @@ endif()
 target_link_libraries(${PROJECT_NAME}
     Vulkan::Vulkan
     glfw
+    stb
 )
 
 # Tests
