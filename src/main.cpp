@@ -990,7 +990,12 @@ private:
 
     void createTextureImage() {
         int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load("../../assets/textures/bailey.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        #ifdef __linux__
+            stbi_uc* pixels = stbi_load("../assets/textures/bailey.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        #else
+            stbi_uc* pixels = stbi_load("../../assets/textures/bailey.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        #endif
+
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 
         if (!pixels) {
