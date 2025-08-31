@@ -30,6 +30,7 @@
 const uint32_t WIDTH = 1024;
 const uint32_t HEIGHT = 768;
 
+
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 const std::vector<const char*> validationLayers = {
