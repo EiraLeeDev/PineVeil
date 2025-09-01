@@ -13,7 +13,6 @@ cmake-build-*/
 
 # Compiled files
 *.o
-*.obj
 *.exe
 *.out
 *.app
