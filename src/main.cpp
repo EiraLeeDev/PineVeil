@@ -175,7 +175,7 @@ private:
 
     bool framebufferResized = false;
 
-    glm::vec3 cameraPos = glm::vec3(2.0f, 2.0f, 2.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 2.0f);
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
     float cameraSpeed = 2.0f;
@@ -1377,23 +1377,35 @@ void createRenderPass() {
         float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastFrameTime).count();
         lastFrameTime = currentTime;
 
+        int press = 0;
+
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             cameraPos += cameraSpeed * deltaTime * cameraFront;
+            press = 1;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
             cameraPos -= cameraSpeed * deltaTime * cameraFront;
+            press = 1;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
             cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+            press = 1;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+            press = 1;
         }
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
             cameraPos += cameraSpeed * deltaTime * cameraUp;
+            press = 1;
         }
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
             cameraPos -= cameraSpeed * deltaTime * cameraUp;
+            press = 1;
+        }
+
+        if (press) {
+            std::cerr << "Camera Position: " << std::to_string(cameraPos.x) << "," << std::to_string(cameraPos.y) << "," << std::to_string(cameraPos.z) << std::endl;
         }
 
         UniformBufferObject ubo{};
@@ -1625,14 +1637,8 @@ void createRenderPass() {
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
         auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
         if (action == GLFW_PRESS) {
-            if (key == GLFW_KEY_W) {
-                std::cout << "W pressed!\n";
-            } else if (key == GLFW_KEY_ESCAPE) {
+            if (key == GLFW_KEY_ESCAPE) {
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
-            }
-        } else if (action == GLFW_RELEASE) {
-            if (key == GLFW_KEY_W) {
-                std::cout << "W released!\n";
             }
         }
     }
