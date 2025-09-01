@@ -20,3 +20,7 @@ Mesh::~Mesh() {
 void Mesh::loadModel() {
     // Figure put mesh loading tommorrow
 }
+
+void Mesh::loadTexture() {
+    // Figure put mesh loading tommorrow
+}
