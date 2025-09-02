@@ -1406,10 +1406,6 @@ void createRenderPass() {
             press = 1;
         }
 
-        if (press) {
-            std::cerr << "Camera Position: " << std::to_string(cameraPos.x) << "," << std::to_string(cameraPos.y) << "," << std::to_string(cameraPos.z) << std::endl;
-        }
-
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
 
