@@ -175,6 +175,7 @@ private:
 
     bool framebufferResized = false;
 
+    double lastX, lastY;
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 2.0f);
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -189,6 +190,7 @@ private:
         glfwSetWindowUserPointer(window, this);
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
         glfwSetKeyCallback(window, keyCallback);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -1407,6 +1409,26 @@ void createRenderPass() {
         if (press) {
             std::cerr << "Camera Position: " << std::to_string(cameraPos.x) << "," << std::to_string(cameraPos.y) << "," << std::to_string(cameraPos.z) << std::endl;
         }
+
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+
+        double xoffset = lastX - xpos;
+        double yoffset = lastY - ypos;
+
+        lastX = xpos;
+        lastY = ypos;
+
+        float sensitivity = 0.0005f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        glm::vec3 right = glm::normalize(glm::cross(cameraFront, cameraUp));
+        glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), (float)xoffset, cameraUp);
+        glm::mat4 pitchRotation = glm::rotate(glm::mat4(1.0f), (float)yoffset, right);
+
+        glm::vec4 newFront = pitchRotation * yawRotation * glm::vec4(cameraFront, 0.0f);
+        cameraFront = glm::normalize(glm::vec3(newFront));
 
         UniformBufferObject ubo{};
         ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));

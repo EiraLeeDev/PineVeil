@@ -162,11 +162,12 @@ endfunction()
 
 compile_shaders()
 
-# Sources
-file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-
-# Create executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME}
+    src/main.cpp
+    src/vertex.cpp
+    src/mesh.cpp
+    src/stb_image.cpp
+)
 
 # Add dependency on shaders if available
 if(TARGET Shaders)
@@ -177,7 +178,6 @@ endif()
 target_link_libraries(${PROJECT_NAME}
     Vulkan::Vulkan
     glfw
-    stb
 )
 
 # Tests

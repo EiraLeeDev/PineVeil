@@ -5,7 +5,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <array>
-#include <vulkan/vulkan.h> // Include Vulkan for VkVertexInputBindingDescription etc.
+#include <vulkan/vulkan.h>
 
 struct Vertex {
     glm::vec3 pos;
@@ -16,4 +16,4 @@ struct Vertex {
     static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
 };
 
-#endif // VERTEX_H
+#endif
