@@ -1,13 +1,13 @@
-// MAKE A H FOR MAIN
-
+#include "pineveil.h"
 #include "mesh.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <sstream>
 #include <vector>
 #include <string>
 
-Mesh::Mesh(const std::string& modelPath, const std::string& texturePath, HelloTriangleApplication* app) : modelPath(modelPath), texturePath(texturePath), app(app) {
+Mesh::Mesh(const std::string& modelPath, const std::string& texturePath, PineVeil* app) : modelPath(modelPath), texturePath(texturePath), app(app) {
     loadModel();
     createVertexBuffer();
     createIndexBuffer();
@@ -93,8 +93,7 @@ void Mesh::createVertexBuffer() {
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
-    app->createBuffer(bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-    
+    app->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);    
     void* data;
     vkMapMemory(app->device, stagingBufferMemory, 0, bufferSize, 0, &data);
     memcpy(data, vertices.data(), (size_t)bufferSize);

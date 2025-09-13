@@ -11,11 +11,11 @@
 #include <iostream>
 #include <filesystem>
 
-class HelloTriangleApplication;
+class PineVeil;
 
 class Mesh {
 public:
-    Mesh(const std::string& modelPath, const std::string& texturePath, HelloTriangleApplication* app);
+    Mesh(const std::string& modelPath, const std::string& texturePath, PineVeil* app);
     ~Mesh();
 
     void createTextureImage();
@@ -49,7 +49,7 @@ public:
     std::vector<VkDescriptorSet> descriptorSets;
 
 private:
-    HelloTriangleApplication* app;
+    PineVeil* app;
     
     int texWidth, texHeight, texChannels;
     stbi_uc* pixels = nullptr;
